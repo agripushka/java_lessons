@@ -39,8 +39,8 @@ public class ContactHelper extends HelperBase {
         wd.findElements(By.name("selected[]")).get(index).click();
     }
 
-    public void initContactModification(int number) {
-        click(By.xpath("//table[@id='maintable']/tbody/tr["+ number + "]/td[8]/a/img"));
+    public void initContactModification() {
+        click(By.xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img"));
     }
 
     public void submitContactModification() {
@@ -73,12 +73,11 @@ public class ContactHelper extends HelperBase {
         List<WebElement> elements = wd.findElements(By.name("entry"));
         int i = 2;
         for (WebElement element : elements){
-            WebElement lastnameObj = element.findElement(By.xpath("//table[@id='maintable']/tbody/tr["+ i + "]/td[2]"));
-            String lastname =  lastnameObj.getText();
-            WebElement firstnameObj = element.findElement(By.xpath("//table[@id='maintable']/tbody/tr["+ i + "]/td[3]"));
+            WebElement firstnameObj = element.findElement(By.xpath("//table[@id='maintable']/tbody/tr["+ i + "]/td[2]"));
             String firstname =  firstnameObj.getText();
-            String id = element.findElement(By.tagName("input")).getAttribute("value");
-            ContactData contact = new ContactData(id, firstname, lastname, null, null, null,null);
+            WebElement lastnameObj = element.findElement(By.xpath("//table[@id='maintable']/tbody/tr["+ i + "]/td[3]"));
+            String lastname =  lastnameObj.getText();
+            ContactData contact = new ContactData(firstname, lastname, null, null, null,null);
             contacts.add(contact);
             i++;
         }

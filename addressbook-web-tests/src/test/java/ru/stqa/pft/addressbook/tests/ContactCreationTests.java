@@ -20,7 +20,7 @@ public class ContactCreationTests extends TestBase {
     public void testContactCreation() {
         List<ContactData> before = app.getContactHelper().getContactList();
         app.getNavigationHelper().gotoContactCreationPage();
-        app.getContactHelper().createContact(new ContactData(before.get(before.size() - 1).getId(),"Имя3", "Фамилия3", "адрес", "test@test.ru", "+99999999999", "test1"), true);
+        app.getContactHelper().createContact(new ContactData("Имя3", "Фамилия3", "адрес", "test@test.ru", "+99999999999", "test1"), true);
         app.getNavigationHelper().gotoHomepage();
         List<ContactData> after = app.getContactHelper().getContactList();
         Assert.assertEquals(after.size(), before.size() + 1);
