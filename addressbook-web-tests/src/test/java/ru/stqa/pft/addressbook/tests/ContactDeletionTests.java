@@ -9,12 +9,12 @@ public class ContactDeletionTests extends TestBase  {
     @Test
     public void testContactDeletion() {
         app.getNavigationHelper().gotoHomepage();
-        int before = app.getContactHelper().getGroupCount();
         if (! app.getContactHelper().isThereAContact()){
             app.getNavigationHelper().gotoContactCreationPage();
             app.getContactHelper().createContact(new ContactData("Имя", "Фамилия", "адрес", "test@test.ru", "+99999999999", "test1"), true);
             app.getNavigationHelper().gotoHomepage();
         }
+        int before = app.getContactHelper().getGroupCount();
         app.getContactHelper().selectContact(before - 1);
         app.getContactHelper().deleteSelectedContact();
         app.getContactHelper().submitContactDeletion();
