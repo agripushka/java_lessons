@@ -6,6 +6,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -20,10 +21,21 @@ public class ContactCreationTests extends TestBase {
     public void testContactCreation() {
         List<ContactData> before = app.getContactHelper().getContactList();
         app.getNavigationHelper().gotoContactCreationPage();
-        app.getContactHelper().createContact(new ContactData(before.get(before.size() - 1).getId(),"Имя3", "Фамилия3", "адрес", "test@test.ru", "+99999999999", "test1"), true);
+        ContactData contact = new ContactData("Имя3", "Фамилия3", "адрес", "test@test.ru", "+99999999999", "test1");
+        app.getContactHelper().createContact(contact, true);
         app.getNavigationHelper().gotoHomepage();
         List<ContactData> after = app.getContactHelper().getContactList();
         Assert.assertEquals(after.size(), before.size() + 1);
+
+        int max=0;
+        for (ContactData c: after){
+            if (c.getId() > max){
+                max = c.getId();
+            }
+        }
+        contact.setId(max);
+        before.add(contact);
+        Assert.assertEquals(new HashSet<Object>(before), new HashSet<Object>(after));
     }
 
 }
