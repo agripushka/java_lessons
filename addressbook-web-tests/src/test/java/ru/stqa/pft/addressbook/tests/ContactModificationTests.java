@@ -4,32 +4,30 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.stqa.pft.addressbook.model.ContactData;
-import ru.stqa.pft.addressbook.model.GroupData;
 
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 
 public class ContactModificationTests extends TestBase  {
 
     @BeforeMethod
     public void ensurePreconditions() {
-        app.getNavigationHelper().gotoHomepage();
-        if (!app.getContactHelper().isThereAContact()){
-            app.getNavigationHelper().gotoContactCreationPage();
-            app.getContactHelper().createContact(new ContactData("Имя", "Фамилия", "адрес", "test@test.ru", "+99999999999", "test1"), true);
-            app.getNavigationHelper().gotoHomepage();
+        app.goTo().homepage();
+        if (app.contact().list().size()==0){
+            app.goTo().contactCreationPage();
+            app.contact().create(new ContactData("Имя", "Фамилия", "адрес", "test@test.ru", "+99999999999", "test1"), true);
+            app.goTo().homepage();
         }
     }
 
     @Test
     public void testContactModification () {
-        List<ContactData> before = app.getContactHelper().getContactList();
+        List<ContactData> before = app.contact().list();
         int index = before.size() - 1;
         ContactData contact = new ContactData(before.get(index).getId(), "Имя4", "Фамилия4", "адрес2", "test2@test.ru", "+29999999999", null);
-        app.getContactHelper().modifyContact(before, index, contact);
-        app.getNavigationHelper().gotoHomepage();
-        List<ContactData> after = app.getContactHelper().getContactList();
+        app.contact().modify(before, index, contact);
+        app.goTo().homepage();
+        List<ContactData> after = app.contact().list();
         Assert.assertEquals(after.size(), before.size());
 
         before.remove(index);
