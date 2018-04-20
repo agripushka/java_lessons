@@ -24,7 +24,7 @@ public class ContactHelper extends HelperBase {
         type(By.name("lastname"),contactData.getLastname());
         type(By.name("address"),contactData.getAddress());
         type(By.name("email"),contactData.getContactEmail());
-        type(By.name("mobile"),contactData.getMobile());
+        type(By.name("mobile"),contactData.getMobilePhone());
 
         if (creation) {
             new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroup());
@@ -102,16 +102,15 @@ public class ContactHelper extends HelperBase {
             return new Contacts(contactCache);
         }
         contactCache = new Contacts();
-        List<WebElement> elements = wd.findElements(By.name("entry"));
-        int i = 2;
-        for (WebElement element : elements){
-            WebElement lastnameObj = element.findElement(By.xpath("//table[@id='maintable']/tbody/tr["+ i + "]/td[2]"));
-            String lastname =  lastnameObj.getText();
-            WebElement firstnameObj = element.findElement(By.xpath("//table[@id='maintable']/tbody/tr["+ i + "]/td[3]"));
-            String firstname =  firstnameObj.getText();
-            int id = Integer.parseInt(element.findElement(By.tagName("input")).getAttribute("value"));
-            contactCache.add( new ContactData().withId(id).withFirstname(firstname).withLastname(lastname));
-            i++;
+        List<WebElement> contacts = wd.findElements(By.name("entry"));
+        for (WebElement contact : contacts){
+            List<WebElement> cells = contact.findElements(By.tagName("td"));
+            int id = Integer.parseInt(cells.get(0).findElement(By.tagName("input")).getAttribute("value"));
+            String lastname =  cells.get(1).getText();
+            String firstname =  cells.get(2).getText();
+            String[] phones = cells.get(5).getText().split("\n");
+            contactCache.add( new ContactData().withId(id).withFirstname(firstname).withLastname(lastname).withHomePhone(phones[0]).withMobilePhone(phones[1]).withWorkPhone(phones[2]));
+
         }
         return new Contacts(contactCache);
     }
