@@ -90,14 +90,6 @@ public class ContactData {
         return id;
     }
 
-    @Override
-    public String toString() {
-        return "ContactData{" +
-                "firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                '}';
-    }
-
     public String getFirstname() {
         return firstname;
     }
@@ -143,6 +135,15 @@ public class ContactData {
 
     public File getPhoto() {
         return photo;
+    }
+
+    @Override
+    public String toString() {
+        return "ContactData{" +
+                "firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", photo=" + photo +
+                '}';
     }
 
     public String getContactEmail() {
