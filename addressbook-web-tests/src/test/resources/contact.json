@@ -1,0 +1,30 @@
+[
+  {
+    "firstname": "Имя 0",
+    "lastname": "Фамилия 0",
+    "address": "адрес 0",
+    "contactEmail": "test@test.ru",
+    "mobilePhone": "+99999999990"
+  },
+  {
+    "firstname": "Имя 1",
+    "lastname": "Фамилия 1",
+    "address": "адрес 1",
+    "contactEmail": "test@test.ru",
+    "mobilePhone": "+99999999991"
+  },
+  {
+    "firstname": "Имя 2",
+    "lastname": "Фамилия 2",
+    "address": "адрес 2",
+    "contactEmail": "test@test.ru",
+    "mobilePhone": "+99999999992"
+  },
+  {
+    "firstname": "Имя 3",
+    "lastname": "Фамилия 3",
+    "address": "адрес 3",
+    "contactEmail": "test@test.ru",
+    "mobilePhone": "+99999999993"
+  }
+]
