@@ -11,6 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class GroupDeletionTests extends TestBase {
 
+
     @BeforeMethod
     public void ensurePreconditions() {
         if (app.db().groups().size()==0){

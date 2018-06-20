@@ -20,7 +20,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ContactCreationTests extends TestBase {
 
-    @DataProvider
+ @DataProvider
     public Iterator<Object[]> validContactsFromXml() throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(new File("src/test/resources/contact.xml")))) {
             String xml = "";
@@ -51,7 +51,9 @@ public class ContactCreationTests extends TestBase {
         }
     }
 
-    @Test (dataProvider = "validContactsFromJson")
+    //Работа через web-интерфейс
+    /*
+       @Test (dataProvider = "validContactsFromJson")
     public void testContactCreation(ContactData contact) {
         //File photo = new File("src/test/resources/stru1.jpg");
         app.goTo().homepage();
@@ -61,6 +63,21 @@ public class ContactCreationTests extends TestBase {
         app.goTo().homepage();
         assertThat(app.contact().count(), equalTo(before.size() +1));
         Contacts after = app.contact().all();
+        assertThat(after, equalTo(
+                before.withAdded(contact.withId(after.stream().mapToInt((g)->g.getId()).max().getAsInt()))));
+
+    }
+    */
+
+    @Test (dataProvider = "validContactsFromJson")
+    public void testContactCreation(ContactData contact) {
+        app.goTo().homepage();
+        Contacts before = app.db().contacts();
+        app.goTo().contactCreationPage();
+        app.contact().create(contact, true);
+        app.goTo().homepage();
+        assertThat(app.contact().count(), equalTo(before.size() +1));
+        Contacts after = app.db().contacts();
         assertThat(after, equalTo(
                 before.withAdded(contact.withId(after.stream().mapToInt((g)->g.getId()).max().getAsInt()))));
 
