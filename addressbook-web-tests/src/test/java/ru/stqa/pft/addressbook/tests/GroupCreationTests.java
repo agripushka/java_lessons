@@ -53,7 +53,7 @@ public class GroupCreationTests extends TestBase {
             return groups.stream().map((g) -> new Object[]{g}).collect(Collectors.toList()).iterator();
         }
     }
-
+/* //Работа через web-интерфейс
     @Test (dataProvider = "validGroupsFromJson")
     public void testGroupCreation(GroupData group) {
         app.goTo().groupPage();
@@ -64,6 +64,7 @@ public class GroupCreationTests extends TestBase {
         assertThat(after, equalTo(
                 before.withAdded(group.withId(after.stream().mapToInt((g)->g.getId()).max().getAsInt()))));
     }
+
     @Test (enabled = false)
     public void testBadGroupCreation() {
         app.goTo().groupPage();
@@ -74,5 +75,27 @@ public class GroupCreationTests extends TestBase {
         Groups after = app.group().all();
         assertThat(after, equalTo(before));
     }
+    */
+     @Test (dataProvider = "validGroupsFromJson")
+        public void testGroupCreation(GroupData group) {
+            app.goTo().groupPage();
+            Groups before = app.db().groups();
+            app.group().create(group);
+            app.goTo().groupPage();
+            assertThat(app.group().count(), equalTo(before.size() + 1));
+            Groups after = app.db().groups();
+            assertThat(after, equalTo(before.withAdded(group.withId(after.stream().mapToInt((g)->g.getId()).max().getAsInt()))));
+        }
+
+        @Test (enabled = false)
+        public void testBadGroupCreation() {
+            app.goTo().groupPage();
+            GroupData group= new GroupData().withName("test'");
+            Groups before = app.db().groups();
+            app.group().create(group);
+            assertThat(app.group().count(), equalTo(before.size()));
+            Groups after = app.db().groups();
+            assertThat(after, equalTo(before));
+        }
 
 }
