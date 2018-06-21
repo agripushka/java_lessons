@@ -50,6 +50,7 @@ public class ContactAddressTests extends TestBase {
         ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(contact);
 
         assertThat(contact.getAddress().replaceAll("\\s","").replaceAll("\\n",""), equalTo(contactInfoFromEditForm.getAddress().replaceAll("\\s","").replaceAll("\\n","")));
+
     }
 
 
