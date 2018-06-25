@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 import ru.stqa.pft.addressbook.model.ContactData;
 import ru.stqa.pft.addressbook.model.Contacts;
+import ru.stqa.pft.addressbook.model.GroupData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +28,11 @@ public class ContactHelper extends HelperBase {
         type(By.name("mobile"),contactData.getMobilePhone());
        // attach(By.name("photo"),contactData.getPhoto());
 
-       if (creation) {
-           if (contactData.getGroups().size()>0){
-           Assert.assertTrue(contactData.getGroups().size()==1);
-            new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroups().iterator().next().getName());
-           }
+        if (creation) {
+            if (contactData.getGroups().size()>0){
+                Assert.assertTrue(contactData.getGroups().size()==1);
+                new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroups().iterator().next().getName());
+            }
         } else {
             Assert.assertFalse(isElementPresent(By.name("new_group")));
         }
@@ -44,7 +45,13 @@ public class ContactHelper extends HelperBase {
     public void initContactModificationById(int id) {
         wd.findElement(By.cssSelector(String.format("a[href='edit.php?id=%s']", id))).click();
     }
+    private void selectGroupById(int id) {
+        wd.findElement(By.xpath("//select[@name='to_group']/option[@value='"+id+"']")).click();
+        //wd.findElement(By.xpath("//*[@id=\"content\"]/form[2]/div[4]/select/option[[@value='"+ id +"']")).click();
 
+       // click(By.xpath("//select[@name='to_group']/option[@id='"+id+"']"));
+
+    }
     public void submitContactModification() {
         click(By.xpath("//div[@id='content']/form[1]/input[22]"));
     }
@@ -140,10 +147,14 @@ public class ContactHelper extends HelperBase {
                 .withAddress(address).withEmail(email).withEmail2(email2).withEmail3(email3);
     }
 
-    public void addInGroup(ContactData contact) {
+    public void addInGroup(ContactData contact, GroupData group) {
         selectContactById(contact.getId());
-       // selectGroup();
-        submitContactDeletion();
+        selectGroupById(group.getId());
+        submitAddInGroup();
         contactCache = null;
     }
+
+
+
+
 }

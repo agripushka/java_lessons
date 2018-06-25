@@ -147,8 +147,12 @@ public class ContactData {
         return mobilePhone;
     }
 
- /*   public String getGroup() {
+  public String getGroup() {
         return group;
+    }
+
+    /*public Groups getGroups() {
+        return new Groups(groups);
     }*/
 
     public Groups getGroups() {
