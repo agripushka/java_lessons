@@ -9,7 +9,11 @@ import ru.stqa.pft.addressbook.model.Groups;
 
 import java.security.acl.Group;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 public class ContactAddInGroupTests extends TestBase {
+    boolean addContact = false;
 
     @BeforeMethod
     public void ensurePreconditions() {
@@ -32,9 +36,18 @@ public class ContactAddInGroupTests extends TestBase {
 
     @Test
     public void testContactAddInGroup() {
+        Contacts before = app.db().contacts();
         ContactData contact = selectContactToTest();
         GroupData group = selectGroupToTest(contact);
         app.contact().addInGroup(contact, group);
+
+        Contacts after = app.db().contacts();
+        if (addContact) {
+            before.add(contact);
+        }
+
+        assertThat(after, equalTo(before));
+        verifyContactListInUI();
 
     }
 
@@ -52,16 +65,18 @@ public class ContactAddInGroupTests extends TestBase {
         //создает новый контакт
         if (selectedContact == null) {
             app.goTo().contactCreationPage();
+            selectedContact = new ContactData()
+                    .withFirstname("Имя").withLastname("Фамилия").withAddress("адрес").withEmail("test@test.ru").withMobilePhone("+99999999999").withGroup("test1");
             app.contact().create(new ContactData()
                     .withFirstname("Имя").withLastname("Фамилия").withAddress("адрес").withEmail("test@test.ru").withMobilePhone("+99999999999").withGroup("test1"), true);
             app.goTo().homepage();
-            selectedContact = new ContactData().withId(app.db().contacts().stream().mapToInt((g) -> g.getId()).max().getAsInt());
+            selectedContact = selectedContact.withId(app.db().contacts().stream().mapToInt((g) -> g.getId()).max().getAsInt());
+            addContact = true;
         }
         return selectedContact;
     }
     // метод, который выбирает группу, в которую можно добавить контакт
     private GroupData selectGroupToTest(ContactData contact) {
-        GroupData selectedGroup = null;
         Groups groupsAll = app.db().groups();
         Groups contactGroups = app.db().contactById(contact.getId()).getGroups();
         for (GroupData group : contactGroups) {
