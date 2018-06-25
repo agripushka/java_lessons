@@ -27,11 +27,14 @@ public class ContactHelper extends HelperBase {
         type(By.name("mobile"),contactData.getMobilePhone());
        // attach(By.name("photo"),contactData.getPhoto());
 
-       /* if (creation) {
-            new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroup());
+       if (creation) {
+           if (contactData.getGroups().size()>0){
+           Assert.assertTrue(contactData.getGroups().size()==1);
+            new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroups().iterator().next().getName());
+           }
         } else {
             Assert.assertFalse(isElementPresent(By.name("new_group")));
-        }*/
+        }
 
     }
 
@@ -53,7 +56,9 @@ public class ContactHelper extends HelperBase {
     public void submitContactDeletion() {
         wd.switchTo().alert().accept();
     }
-
+    public void submitAddInGroup() {
+        click(By.cssSelector("input[value='Add to']"));
+    }
     public void create(ContactData contact, boolean b) {
         fillContactForm(contact, b);
         submitContactCreation();
@@ -133,5 +138,12 @@ public class ContactHelper extends HelperBase {
         return new ContactData().withId(contact.getId()).withFirstname(firstname).withLastname(lastname)
                 .withHomePhone(home).withMobilePhone(mobile).withWorkPhone(work)
                 .withAddress(address).withEmail(email).withEmail2(email2).withEmail3(email3);
+    }
+
+    public void addInGroup(ContactData contact) {
+        selectContactById(contact.getId());
+       // selectGroup();
+        submitContactDeletion();
+        contactCache = null;
     }
 }

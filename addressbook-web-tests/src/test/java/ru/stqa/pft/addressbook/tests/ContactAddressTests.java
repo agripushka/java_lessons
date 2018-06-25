@@ -38,7 +38,7 @@ public class ContactAddressTests extends TestBase {
         if (app.db().contacts().size()==0){
             app.goTo().contactCreationPage();
             app.contact().create(new ContactData()
-                    .withFirstname("Имя").withLastname("Фамилия").withAddress("адрес").withEmail("test@test.ru").withMobilePhone("+99999999999").withGroup("test1"), true);
+                    .withFirstname("Имя").withLastname("Фамилия").withAddress("адрес").withEmail("test@test.ru").withMobilePhone("+99999999999"), true);
             app.goTo().homepage();
         }
     }

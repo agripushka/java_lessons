@@ -5,7 +5,9 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.File;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name="addressbook")
@@ -36,7 +38,7 @@ public class ContactData {
     @Column(name = "work")
     @Type(type = "text")
     private String workPhone;
-    @Transient
+   @Transient
     private String group;
     @Transient
     private String allPhones;
@@ -46,9 +48,13 @@ public class ContactData {
     private String email3;
     @Transient
     private String allEmail;
-    @Column(name = "photo")
     @Type(type = "text")
     private String photo;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="address_in_groups",
+            joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name="group_id"))
+    private Set<GroupData> groups = new HashSet<GroupData>();
 
     public ContactData withId(int id) {
 
@@ -141,9 +147,14 @@ public class ContactData {
         return mobilePhone;
     }
 
-    public String getGroup() {
+ /*   public String getGroup() {
         return group;
+    }*/
+
+    public Groups getGroups() {
+        return new Groups(groups);
     }
+
     public String getHomePhone() {
         return homePhone;
     }
@@ -201,4 +212,8 @@ public class ContactData {
     }
 
 
+    public ContactData inGroup(GroupData group) {
+        groups.add(group);
+        return this;
+    }
 }
