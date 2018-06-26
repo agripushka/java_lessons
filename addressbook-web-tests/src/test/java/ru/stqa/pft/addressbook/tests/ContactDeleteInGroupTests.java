@@ -7,14 +7,10 @@ import ru.stqa.pft.addressbook.model.Contacts;
 import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.model.Groups;
 
-import java.security.acl.Group;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ContactAddInGroupTests extends TestBase {
-    boolean addContact = false;
-
+public class ContactDeleteInGroupTests extends TestBase {
     @BeforeMethod
     public void ensurePreconditions() {
         //проверка, есть ли контакты в списке
@@ -35,58 +31,52 @@ public class ContactAddInGroupTests extends TestBase {
     }
 
     @Test
-    public void testContactAddInGroup() {
+    public void testContactDeleteInGroup() {
         Contacts before = app.db().contacts();
         ContactData contact = selectContactToTest();
         GroupData group = selectGroupToTest(contact);
-        app.contact().addInGroup(contact, group);
+        app.contact().deleteInGroup(contact, group);
 
         Contacts after = app.db().contacts();
-        if (addContact) {
-            before.add(contact);
-        }
+
         assertThat(after, equalTo(before));
         verifyContactListInUI();
-
     }
 
-    // метод, который выбирает контакт, который можно добавить в группу или создает новый в случае отсутствия подходящего контакта
+
+    // метод, который выбирает контакт, который можно удалить из группы
     private ContactData selectContactToTest() {
-        ContactData selectedContact = null; //контакт, который будет добавляться в группу
+        ContactData selectedContact = null; //контакт, который будет удален из группы
         Contacts contacts = app.db().contacts();
         Groups groups = app.db().groups();
 
         //проверяет, соответствие групп и контактов
         for (ContactData contact : contacts) {
-            if (contact.getGroups().size() < groups.size()) {
+            if (contact.getGroups().size()!= 0) {
                 selectedContact = contact;
             }
         }
-        //если все контакты добавлены во все группы,
-        //создает новый контакт
+        //если ни один контакт не добавлен ни в одну группу
+        //добавляет контакт в группу
         if (selectedContact == null) {
-            app.goTo().contactCreationPage();
-            selectedContact = new ContactData()
-                    .withFirstname("Имя").withLastname("Фамилия").withAddress("адрес").withEmail("test@test.ru").withMobilePhone("+99999999999").withGroup("test1");
-            app.contact().create(selectedContact, true);
-            app.goTo().homepage();
-            selectedContact = selectedContact.withId(app.db().contacts().stream().mapToInt((g) -> g.getId()).max().getAsInt());
-            addContact = true; //нужен для проверки: добавлялся новый контакт или нет
+            System.out.println("Добавьте контакт в группу");
+            //app.contact().addInGroup(contact, group);
         }
         return selectedContact;
     }
-    // метод, который выбирает группу, в которую можно добавить контакт
+
+
+    // метод, который выбирает группу, из которой можно удалить контакт
     private GroupData selectGroupToTest(ContactData contact) {
-        Groups groupsAll = app.db().groups();
+        //Groups groupsAll = app.db().groups();
+        GroupData groupDelete = new GroupData();
         Groups contactGroups = app.db().contactById(contact.getId()).getGroups();
         for (GroupData group : contactGroups) {
-            groupsAll.remove(group);
+            if (contactGroups.size()!= 0) {
+                groupDelete = group;
+            }
         }
-        return groupsAll.iterator().next();
+        return groupDelete;
     }
-
-
-
-
 
 }

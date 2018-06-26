@@ -47,10 +47,9 @@ public class ContactHelper extends HelperBase {
     }
     private void selectGroupById(int id) {
         wd.findElement(By.xpath("//select[@name='to_group']/option[@value='"+id+"']")).click();
-        //wd.findElement(By.xpath("//*[@id=\"content\"]/form[2]/div[4]/select/option[[@value='"+ id +"']")).click();
-
-       // click(By.xpath("//select[@name='to_group']/option[@id='"+id+"']"));
-
+     }
+    private void selectGroupByIdType(int id) {
+        wd.findElement(By.xpath("//select[@name='group']/option[@value='"+id+"']")).click();
     }
     public void submitContactModification() {
         click(By.xpath("//div[@id='content']/form[1]/input[22]"));
@@ -65,6 +64,9 @@ public class ContactHelper extends HelperBase {
     }
     public void submitAddInGroup() {
         click(By.cssSelector("input[value='Add to']"));
+    }
+    private void submitRemoveInGroup() {
+        click(By.cssSelector("input[name='remove']"));
     }
     public void create(ContactData contact, boolean b) {
         fillContactForm(contact, b);
@@ -151,6 +153,14 @@ public class ContactHelper extends HelperBase {
         selectContactById(contact.getId());
         selectGroupById(group.getId());
         submitAddInGroup();
+        contactCache = null;
+    }
+
+
+    public void deleteInGroup(ContactData contact, GroupData group) {
+        selectGroupByIdType(group.getId());
+        selectContactById(contact.getId());
+        submitRemoveInGroup();
         contactCache = null;
     }
 

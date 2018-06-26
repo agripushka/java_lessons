@@ -49,6 +49,7 @@ public class ContactAddressTests extends TestBase {
         ContactData contact = app.db().contacts().iterator().next();
         ContactData contactInfoFromEditForm = app.contact().infoFromEditForm(contact);
 
+        //проверяет, удаляя лишние символы
         assertThat(contact.getAddress().replaceAll("\\s","").replaceAll("\\n",""), equalTo(contactInfoFromEditForm.getAddress().replaceAll("\\s","").replaceAll("\\n","")));
 
     }
